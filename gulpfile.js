@@ -14,11 +14,10 @@
 не забудьте удалить оба плагина для vscode - они больше не нужны + vscode будет загружаться чуть быстрее (т.к. ему не надо инитить свои плагины)
 */
 
-const path_to_main_scss_file = 'assets/styles/style.scss'; // путь до главного scss файла
-const scss_path_to_watch = 'assets/styles/**/*.scss'; // наблюдать за изменениями во всех папках в папке 'styles', scss с любым именем файла
-const destination_path = 'dist/'; // папка куда положить итоговый css
-const final_css_name = 'style.css'; // имя итоговогой файла
-
+const path_to_main_scss_file = 'assets/scss/style.scss';
+const scss_path_to_watch = 'assets/scss/**/*.scss';
+const destination_path = 'assets/styles/'; 
+const final_css_name = 'style.css';
 
 const gulp         = require('gulp');
 const sass         = require('gulp-sass');
@@ -26,7 +25,6 @@ const sourcemaps   = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
 const concat       = require('gulp-concat');
 const browserSync  = require('browser-sync').create();
-const browser_list = ['last 2 versions', 'ie >= 10'];
 
 function sync() {
 	browserSync.init({
@@ -40,14 +38,25 @@ function sync() {
 }
 
 function build_sass() {
-	return gulp.src(path_to_main_scss_file) // get scss file from path
-	.pipe(sourcemaps.init()) // init sourcemaps (for resolving from which scss file your css selector was built) http://prntscr.com/m6rj2p
-	.pipe(sass().on('error', sass.logError)) // compile scss to css
-	.pipe(sourcemaps.write()) // write sourcemaps to css files
-	.pipe(concat(final_css_name)) // concatenate all compiled css files to 1 file
-	.pipe(autoprefixer({browsers: browser_list})) // add vendor prefixes
-    .pipe(gulp.dest(destination_path)) // put final css to destination path
-    .pipe(browserSync.stream()); // reload browser
+	return gulp.src(path_to_main_scss_file) 
+	.pipe(sourcemaps.init())
+	.pipe(sass().on('error', sass.logError))
+	.pipe(sourcemaps.write())
+	.pipe(concat(final_css_name))
+	.pipe(autoprefixer({
+        overrideBrowserslist: ['last 8 versions'],
+        browsers: [
+            'Android >= 4',
+            'Chrome >= 20',
+            'Firefox >= 24',
+            'Explorer >= 11',
+            'iOS >= 6',
+            'Opera >= 12',
+            'Safari >= 6',
+        ],
+    }))
+    .pipe(gulp.dest(destination_path))
+    .pipe(browserSync.stream());
 }
 
 exports.default = sync;

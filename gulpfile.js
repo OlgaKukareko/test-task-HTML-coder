@@ -20,7 +20,7 @@ const destination_path = 'assets/styles/';
 const final_css_name = 'style.css';
 
 const gulp         = require('gulp');
-const sass         = require('gulp-sass');
+const sass         = require('gulp-sass')(require('sass'));
 const sourcemaps   = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
 const concat       = require('gulp-concat');
